@@ -13,9 +13,9 @@ As a key/value store, it deals with **5** operations:
 
 * `Delete() `  
 
-* `Clear()` deletes all elements  
+* `Clear()` deletes all elements.  
 
-* `Length()`returns the number of elements stored  
+* `Length()`returns the number of elements stored.  
 
 It is safe for concurrent use.
 
