@@ -5,17 +5,17 @@ Small Array Container - chained, reusable, associative arrays
 -------------------------------------------------------------
 
 This package defines a datastructure that may be used as a small recyclable key/value store.
-As a key/value store, it deals with 5 operations:
+As a key/value store, it deals with **5** operations:
 
-* Get()   		tries to retrieve a Value. Returns an error if key is absent.  
+* `Get()` tries to retrieve a Value. Returns an error if key is absent.  
 
-* Put()   		inserts a Value for a given Key.  
+* `Put()` inserts a Value for a given Key.  
 
-* Delete()   
+* `Delete() `  
 
-* Clear()   	Delete all elements  
+* `Clear()` deletes all elements  
 
-* Length()   	returns the number of elements stored  
+* `Length()`returns the number of elements stored  
 
 It is safe for concurrent use.
 
@@ -30,7 +30,7 @@ After the request servicing, it will be cleared
 so that it can be reused.  
 
 
-*TODO*: Create a generator to allow people to specialize Key and Value types statically.  
+*Todo*: Create a generator to allow people to specialize Key and Value types statically.  
 
 *Trivia*: "sac" is the French word for "bag".
 
