@@ -1,14 +1,22 @@
-// sac package defines `small array containers` a data structure of the associative array family.
-// It is useful when one needs a very small Key/Value store to transit between handlers of each http request.
-// It is not supposed to hold a large number of objects. Typically below ~16.
-// It is useful to control the amount of garbage generated.
-// TODO (Tay) : think about optional map fallback.
+// package sac defines `small array containers` a data structure of the associative array family.
+//
+// It is useful when one needs a small, recyclable Key/Value store.
+// For instance, as storage that transits between handlers of an http request.
+// The advantage is that it is not garbage collected but reused.
+// That means less pressure on the garbage collector which is always good.
+//
+// It is not supposed to hold a large number of objects.
+// Typically up to ~16 will compete with a RWMutex protected regular map.
+// (see benchmark results in test file)
 package sac
 
 import (
 	"errors"
 	"sync"
 )
+
+// TODO (tay) : think about optional map fallback.
+// TODO (tay) : create generator to parameterize Key/Value types.
 
 const SIZE = 32 // Optimal size in synthetic tests.
 
@@ -44,7 +52,7 @@ func Pool() *sync.Pool {
 }
 
 // Get retrieves an item from the sac.
-// The key must be suitable for comparison or else it will panic.
+// Safe for concurrent use by multiple goroutines.
 func (i *Instance) Get(key interface{}) (interface{}, error) {
 	i.mutex.RLock()
 	defer i.mutex.RUnlock()
@@ -64,7 +72,7 @@ func (i *Instance) Get(key interface{}) (interface{}, error) {
 }
 
 // Put puts an item into the sac.
-// The key must be suitable for comparison or else it will panic.
+// Safe for concurrent use by multiple goroutines.
 func (i *Instance) Put(key, value interface{}) {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
@@ -88,7 +96,7 @@ func (i *Instance) Put(key, value interface{}) {
 }
 
 // Delete removes an item from the sac.
-// The key must be suitable for comparison or else it will panic.
+// Safe for concurrent use by multiple goroutines.
 func (i *Instance) Delete(key interface{}) {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
@@ -129,8 +137,7 @@ func (i *Instance) Delete(key interface{}) {
 }
 
 // Length will return the total number of element in a sac.
-// A sac can nest several sac Instances.
-// Length will add the items from those nested sac instances too.
+// Safe for concurrent use by multiple goroutines.
 func (i *Instance) Length() int {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
@@ -143,7 +150,8 @@ func (i *Instance) Length() int {
 	return l
 }
 
-// Clear will empty a sac and all its nested sacs.
+// Clear will empty a sac.
+// Safe for concurrent use by multiple goroutines.
 func (i *Instance) Clear() {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
