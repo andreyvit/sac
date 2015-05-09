@@ -18,8 +18,11 @@ import (
 // TODO (tay) : think about optional map fallback.
 // TODO (tay) : create generator to parameterize Key/Value types.
 
-const SIZE = 32 // Optimal size in synthetic tests.
+const SIZE = 32 // Optimal sac size in synthetic tests.
 
+// Instance defines the sac datatype.
+// It is an opaque datastructure to the user.
+// Internally, it is simply a linked list of same-size arrays.
 type Instance struct {
 	items  [SIZE]item
 	pool   *sync.Pool
@@ -34,7 +37,7 @@ type item struct {
 	Value interface{}
 }
 
-// New returns a new sac
+// New returns a new sac.
 func New(p *sync.Pool) *Instance {
 	res := new(Instance)
 	res.pool = p
@@ -42,7 +45,6 @@ func New(p *sync.Pool) *Instance {
 }
 
 // Pool initializes a new empty sac Pool ready for use.
-// It is possible to call Get()
 func Pool() *sync.Pool {
 	v := new(sync.Pool)
 	v.New = func() interface{} {
