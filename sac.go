@@ -18,7 +18,8 @@ import (
 // TODO (tay) : think about optional map fallback.
 // TODO (tay) : create generator to parameterize Key/Value types.
 
-const SIZE = 32 // Optimal sac size in synthetic tests.
+const SIZE = 32                                   // Optimal sac size in synthetic tests.
+const padOffset = 2 - int(2*(^uintptr(0)>>63<<1)) // for frendliness on both 32bit and 64bit
 
 // Instance defines the sac datatype.
 // It is an opaque datastructure to the user.
@@ -29,7 +30,7 @@ type Instance struct {
 	mutex  *sync.RWMutex
 	length int
 	next   *Instance
-	pad    [(SIZE<<1 + 4) & 7]uint64
+	pad    [padOffset + (SIZE<<1+4)&7]uint64
 }
 
 type item struct {
