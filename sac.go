@@ -26,7 +26,7 @@ const SIZE = 32 // Optimal sac size in synthetic tests.
 type Instance struct {
 	items  [SIZE]item
 	pool   *sync.Pool
-	mutex  sync.RWMutex
+	mutex  *sync.RWMutex
 	length int
 	next   *Instance
 	pad    [(SIZE<<1 + 4) & 7]uint64
@@ -40,6 +40,7 @@ type item struct {
 // New returns a new sac.
 func New(p *sync.Pool) *Instance {
 	res := new(Instance)
+	res.mutex = new(sync.RWMutex)
 	res.pool = p
 	return res
 }

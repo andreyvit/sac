@@ -31,14 +31,6 @@ func generate() []item {
 
 // TESTS
 
-func TestPool(t *testing.T) {
-	p := Pool()
-	Sac := p.Get().(*Instance)
-	if n := New(p); *Sac != *n {
-		t.Fatalf("Instanciation failure. Wanted %v but got %v", n, Sac)
-	}
-}
-
 func TestSet(t *testing.T) {
 	var PL *sync.Pool = Pool()
 	Inputs := generate()
