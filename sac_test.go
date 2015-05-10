@@ -343,7 +343,7 @@ func BenchmarkGethmap32(b *testing.B) { benchmarkGet_StdHMap(32, b) }
 /* Benchmark results on Dual Core Intel Pentium CPU B950 2.1GHz
    6GB DDR3 RAM
    Ubuntu 14.04
-   Size of Sac is 32. ()
+   Size of Sac is 32.
 
 // SET
 

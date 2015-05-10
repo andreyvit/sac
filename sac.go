@@ -1,4 +1,4 @@
-// package sac defines `small array containers` a data structure of the associative array family.
+// Package sac defines `small array containers` a data structure of the associative array family.
 //
 // It is useful when one needs a small, recyclable Key/Value store.
 // For instance, as storage that transits between handlers of an http request.
