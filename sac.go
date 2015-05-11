@@ -21,6 +21,10 @@ import (
 const SIZE = 32                                   // Optimal sac size in synthetic tests.
 const padOffset = 2 - int(2*(^uintptr(0)>>63<<1)) // for frendliness on both 32bit and 64bit
 
+var (
+	ErrNOTFOUND = errors.New("NOTFOUND")
+)
+
 // Instance defines the sac datatype.
 // It is an opaque datastructure to the user.
 // Internally, it is simply a linked list of same-size arrays.
@@ -68,11 +72,11 @@ func (i *Instance) Get(key interface{}) (interface{}, error) {
 	}
 	if i.length < SIZE {
 		i.mutex.RUnlock()
-		return nil, errors.New("NOTFOUND")
+		return nil, ErrNOTFOUND
 	}
 	if i.next == nil {
 		i.mutex.RUnlock()
-		return nil, errors.New("NOTFOUND")
+		return nil, ErrNOTFOUND
 	}
 	i.mutex.RUnlock()
 	return i.next.Get(key)
