@@ -108,7 +108,7 @@ func (i *Instance) Put(key, value interface{}) {
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Delete(key interface{}) {
 	i.mutex.Lock()
-	//defer i.mutex.Unlock()
+
 	lgt := i.length
 
 	if i.next == nil {
