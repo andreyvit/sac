@@ -59,19 +59,22 @@ func Pool() *sync.Pool {
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Get(key interface{}) (interface{}, error) {
 	i.mutex.RLock()
-	defer i.mutex.RUnlock()
 
 	for k := 0; k < i.length; k++ {
 		if i.items[k].Key == key {
+			i.mutex.RUnlock()
 			return i.items[k].Value, nil
 		}
 	}
 	if i.length < SIZE {
+		i.mutex.RUnlock()
 		return nil, errors.New("NOTFOUND")
 	}
 	if i.next == nil {
+		i.mutex.RUnlock()
 		return nil, errors.New("NOTFOUND")
 	}
+	i.mutex.RUnlock()
 	return i.next.Get(key)
 }
 
@@ -79,11 +82,11 @@ func (i *Instance) Get(key interface{}) (interface{}, error) {
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Put(key, value interface{}) {
 	i.mutex.Lock()
-	defer i.mutex.Unlock()
 
 	for k := 0; k < i.length; k++ {
 		if i.items[k].Key == key {
 			i.items[k].Value = value
+			i.mutex.Unlock()
 			return
 		}
 	}
@@ -92,10 +95,12 @@ func (i *Instance) Put(key, value interface{}) {
 			i.next = i.pool.Get().(*Instance)
 		}
 		i.next.Put(key, value)
+		i.mutex.Unlock()
 		return
 	}
 	i.items[i.length] = item{key, value}
 	i.length++
+	i.mutex.Unlock()
 	return
 }
 
@@ -103,7 +108,7 @@ func (i *Instance) Put(key, value interface{}) {
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Delete(key interface{}) {
 	i.mutex.Lock()
-	defer i.mutex.Unlock()
+	//defer i.mutex.Unlock()
 	lgt := i.length
 
 	if i.next == nil {
@@ -114,6 +119,7 @@ func (i *Instance) Delete(key interface{}) {
 					i.items[l-1].Key = i.items[l].Key
 				}
 				i.length--
+				i.mutex.Unlock()
 				return
 			}
 		}
@@ -134,9 +140,11 @@ func (i *Instance) Delete(key interface{}) {
 		if i.next.length == 0 {
 			i.pool.Put(i.next)
 			i.next = nil
+			i.mutex.Unlock()
 			return
 		}
 	}
+	i.mutex.Unlock()
 	return
 }
 
@@ -144,13 +152,13 @@ func (i *Instance) Delete(key interface{}) {
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Length() int {
 	i.mutex.Lock()
-	defer i.mutex.Unlock()
 	c := i
 	var l int
 	for c != nil {
 		l += c.length
 		c = c.next
 	}
+	i.mutex.Unlock()
 	return l
 }
 
@@ -158,7 +166,6 @@ func (i *Instance) Length() int {
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Clear() {
 	i.mutex.Lock()
-	defer i.mutex.Unlock()
 
 	for i.next != nil {
 		if i.next.length == 0 {
@@ -189,5 +196,6 @@ func (i *Instance) Clear() {
 		v.Value = nil
 	}
 	i.length = 0
+	i.mutex.Unlock()
 	return
 }

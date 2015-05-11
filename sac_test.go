@@ -31,7 +31,7 @@ func generate() []item {
 
 // TESTS
 
-func TestSet(t *testing.T) {
+func TestPut(t *testing.T) {
 	var PL *sync.Pool = Pool()
 	Inputs := generate()
 
@@ -72,9 +72,9 @@ func TestSet(t *testing.T) {
 	}
 }
 
-// TestSetsamekey test what happens when we insert a new value
+// TestPutsamekey test what happens when we insert a new value
 // for an already entered key. The old value should be overwritten.
-func TestSetsamekey(t *testing.T) {
+func TestPutsamekey(t *testing.T) {
 	var PL *sync.Pool = Pool()
 	var Inputs = []item{item{"key1", "val1"}, item{"key1", "val2"}}
 	Sac := New(PL)
@@ -215,7 +215,7 @@ func MaxParallelism() int {
 
 var result interface{}
 
-func benchmarkSet_Sac(i int, b *testing.B) {
+func benchmarkPut_Sac(i int, b *testing.B) {
 	b.ReportAllocs()
 	b.SetParallelism(MaxParallelism())
 
@@ -233,7 +233,7 @@ func benchmarkSet_Sac(i int, b *testing.B) {
 	})
 }
 
-func benchmarkSet_StdHMap(i int, b *testing.B) {
+func benchmarkPut_StdHMap(i int, b *testing.B) {
 	b.ReportAllocs()
 	b.SetParallelism(MaxParallelism())
 
@@ -290,32 +290,32 @@ func benchmarkGet_StdHMap(i int, b *testing.B) {
 // Benchmark list below based on different values for the number of items
 
 // Setter benchmark for Small Array Containers versus Standard Hashmap
-func BenchmarkSetsac1(b *testing.B)  { benchmarkSet_Sac(1, b) }
-func BenchmarkSethmap1(b *testing.B) { benchmarkSet_StdHMap(1, b) }
+func BenchmarkPutsac1(b *testing.B)  { benchmarkPut_Sac(1, b) }
+func BenchmarkPuthmap1(b *testing.B) { benchmarkPut_StdHMap(1, b) }
 
-func BenchmarkSetsac5(b *testing.B)  { benchmarkSet_Sac(5, b) }
-func BenchmarkSethmap5(b *testing.B) { benchmarkSet_StdHMap(5, b) }
+func BenchmarkPutsac5(b *testing.B)  { benchmarkPut_Sac(5, b) }
+func BenchmarkPuthmap5(b *testing.B) { benchmarkPut_StdHMap(5, b) }
 
-func BenchmarkSetsac6(b *testing.B)  { benchmarkSet_Sac(6, b) }
-func BenchmarkSethmap6(b *testing.B) { benchmarkSet_StdHMap(6, b) }
+func BenchmarkPutsac6(b *testing.B)  { benchmarkPut_Sac(6, b) }
+func BenchmarkPuthmap6(b *testing.B) { benchmarkPut_StdHMap(6, b) }
 
-func BenchmarkSetsac7(b *testing.B)  { benchmarkSet_Sac(7, b) }
-func BenchmarkSethmap7(b *testing.B) { benchmarkSet_StdHMap(7, b) }
+func BenchmarkPutsac7(b *testing.B)  { benchmarkPut_Sac(7, b) }
+func BenchmarkPuthmap7(b *testing.B) { benchmarkPut_StdHMap(7, b) }
 
-func BenchmarkSetsac8(b *testing.B)  { benchmarkSet_Sac(8, b) }
-func BenchmarkSethmap8(b *testing.B) { benchmarkSet_StdHMap(8, b) }
+func BenchmarkPutsac8(b *testing.B)  { benchmarkPut_Sac(8, b) }
+func BenchmarkPuthmap8(b *testing.B) { benchmarkPut_StdHMap(8, b) }
 
-func BenchmarkSetsac10(b *testing.B)  { benchmarkSet_Sac(10, b) }
-func BenchmarkSethmap10(b *testing.B) { benchmarkSet_StdHMap(10, b) }
+func BenchmarkPutsac10(b *testing.B)  { benchmarkPut_Sac(10, b) }
+func BenchmarkPuthmap10(b *testing.B) { benchmarkPut_StdHMap(10, b) }
 
-func BenchmarkSetsac11(b *testing.B)  { benchmarkSet_Sac(11, b) }
-func BenchmarkSethmap11(b *testing.B) { benchmarkSet_StdHMap(11, b) }
+func BenchmarkPutsac11(b *testing.B)  { benchmarkPut_Sac(11, b) }
+func BenchmarkPuthmap11(b *testing.B) { benchmarkPut_StdHMap(11, b) }
 
-func BenchmarkSetsac16(b *testing.B)  { benchmarkSet_Sac(16, b) }
-func BenchmarkSethmap16(b *testing.B) { benchmarkSet_StdHMap(16, b) }
+func BenchmarkPutsac16(b *testing.B)  { benchmarkPut_Sac(16, b) }
+func BenchmarkPuthmap16(b *testing.B) { benchmarkPut_StdHMap(16, b) }
 
-func BenchmarkSetsac32(b *testing.B)  { benchmarkSet_Sac(32, b) }
-func BenchmarkSethmap32(b *testing.B) { benchmarkSet_StdHMap(32, b) }
+func BenchmarkPutsac32(b *testing.B)  { benchmarkPut_Sac(32, b) }
+func BenchmarkPuthmap32(b *testing.B) { benchmarkPut_StdHMap(32, b) }
 
 // Getter benchmark for Small Array Containers versus Standard Hashmap
 
@@ -347,57 +347,58 @@ func BenchmarkGethmap32(b *testing.B) { benchmarkGet_StdHMap(32, b) }
 
 // SET
 
-BenchmarkSetsac1	 5000000	       264 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap1	 5000000	       383 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac1	20000000	        97.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap1	 5000000	       375 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac5	 5000000	       336 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap5	 5000000	       399 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac5	10000000	       164 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap5	 5000000	       388 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac6	 5000000	       347 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap6	 5000000	       389 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac6	10000000	       174 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap6	 5000000	       380 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac7	 5000000	       360 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap7	 5000000	       384 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac7	10000000	       192 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap7	 5000000	       373 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac8	 5000000	       388 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap8	 5000000	       397 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac8	10000000	       214 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap8	 5000000	       387 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac10	 3000000	       424 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap10	 3000000	       425 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac10	 5000000	       257 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap10	 3000000	       419 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac11	 3000000	       437 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap11	 5000000	       380 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac11	 5000000	       269 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap11	 5000000	       371 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac16	 3000000	       528 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap16	 5000000	       388 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac16	 5000000	       363 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap16	 5000000	       381 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkSetsac32	 2000000	       870 ns/op	       0 B/op	       0 allocs/op
-BenchmarkSethmap32	 5000000	       349 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPutsac32	 2000000	       709 ns/op	       0 B/op	       0 allocs/op
+BenchmarkPuthmap32	 5000000	       340 ns/op	       0 B/op	       0 allocs/op
 
 
 
 
 // GET
 
-BenchmarkGetsac1	10000000	       231 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap1	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac1	30000000	        59.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap1	 5000000	       332 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkGetsac5	 5000000	       300 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap5	 5000000	       346 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac5	10000000	       134 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap5	 5000000	       341 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkGetsac8	 5000000	       350 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap8	 5000000	       336 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac8	10000000	       185 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap8	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkGetsac10	 5000000	       392 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap10	 5000000	       368 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac10	10000000	       228 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap10	 5000000	       363 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkGetsac11	 5000000	       400 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap11	 5000000	       323 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac11	10000000	       239 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap11	 5000000	       321 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkGetsac16	 3000000	       500 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap16	 5000000	       336 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac16	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap16	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
 
-BenchmarkGetsac32	 2000000	       847 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap32	 5000000	       297 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGetsac32	 2000000	       678 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGethmap32	 5000000	       291 ns/op	       0 B/op	       0 allocs/op
+
 
 */
