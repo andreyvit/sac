@@ -15,11 +15,10 @@ import (
 	"sync"
 )
 
-// TODO (tay) : think about optional map fallback.
 // TODO (tay) : create generator to parameterize Key/Value types.
 
 const SIZE = 32                                   // Optimal sac size in synthetic tests.
-const padOffset = 2 - int(2*(^uintptr(0)>>63<<1)) // for frendliness on both 32bit and 64bit
+const padOffset = 2 - int(2*(^uintptr(0)>>63<<1)) // for friendliness on both 32bit and 64bit
 
 var (
 	ErrNOTFOUND = errors.New("NOTFOUND")
