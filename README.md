@@ -1,5 +1,4 @@
-**sac**
-=======
+#sac
 
 Small Array Container - chained, reusable, associative arrays
 -------------------------------------------------------------
@@ -24,18 +23,20 @@ It means that the more elements stored, the slower the operations will be.
 About a dozen or so elements is the use-case designed for.
 For performance data, look at the test file which includes synthetic benchmarks.
 
-###What can this be used for ?
+#What can this be used for ?
 Typical usage is as a per http Request storage datastructure. 
 After the request servicing, it will be cleared
-so that it can be reused.  
+so that it can be reused.
+
+#How is it implemented?
+This is an unrolled linked list that is safe for concurrent use.
+The advantage is that it does not use hashing as a map would. 
 
 
-*Todo*: Create a generator to allow people to specialize Key and Value types statically.  
-
-*Trivia*: "sac" is the French word for "bag".
+*Todo*: Create a generator to allow people to specialize Key and/or Value.  
 
 API
----
+-------------------------------------------------------------
 
 ###Instantiation
 ``` go

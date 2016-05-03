@@ -32,7 +32,7 @@ func generate() []item {
 // TESTS
 
 func TestPut(t *testing.T) {
-	var PL *sync.Pool = Pool()
+	var PL = Pool()
 	Inputs := generate()
 
 	// For each input
@@ -75,7 +75,7 @@ func TestPut(t *testing.T) {
 // TestPutsamekey test what happens when we insert a new value
 // for an already entered key. The old value should be overwritten.
 func TestPutsamekey(t *testing.T) {
-	var PL *sync.Pool = Pool()
+	var PL = Pool()
 	var Inputs = []item{item{"key1", "val1"}, item{"key1", "val2"}}
 	Sac := New(PL)
 
@@ -99,7 +99,7 @@ func TestPutsamekey(t *testing.T) {
 
 // TestDelete tests the Delete() method of a Sac.
 func TestDelete(t *testing.T) {
-	var PL *sync.Pool = Pool()
+	var PL = Pool()
 	Inputs := generate()
 	Sac := New(PL)
 
@@ -128,9 +128,12 @@ func TestDelete(t *testing.T) {
 
 // TestClear tests the Clear() method of a Sac.
 func TestClear(t *testing.T) {
-	var PL *sync.Pool = Pool()
+	var PL = Pool()
 	Inputs := generate()
 	Sac := New(PL)
+
+	// Test on empty
+	Sac.Clear()
 
 	for _, in := range Inputs {
 		Sac.Put(in.Key, in.Value)
@@ -339,66 +342,3 @@ func BenchmarkGethmap16(b *testing.B) { benchmarkGet_StdHMap(16, b) }
 
 func BenchmarkGetsac32(b *testing.B)  { benchmarkGet_Sac(32, b) }
 func BenchmarkGethmap32(b *testing.B) { benchmarkGet_StdHMap(32, b) }
-
-/* Benchmark results on Dual Core Intel Pentium CPU B950 2.1GHz
-   6GB DDR3 RAM
-   Ubuntu 14.04
-   Size of Sac is 32.
-
-// SET
-
-BenchmarkPutsac1	20000000	        97.6 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap1	 5000000	       375 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac5	10000000	       164 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap5	 5000000	       388 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac6	10000000	       174 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap6	 5000000	       380 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac7	10000000	       192 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap7	 5000000	       373 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac8	10000000	       214 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap8	 5000000	       387 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac10	 5000000	       257 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap10	 3000000	       419 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac11	 5000000	       269 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap11	 5000000	       371 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac16	 5000000	       363 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap16	 5000000	       381 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkPutsac32	 2000000	       709 ns/op	       0 B/op	       0 allocs/op
-BenchmarkPuthmap32	 5000000	       340 ns/op	       0 B/op	       0 allocs/op
-
-
-
-
-// GET
-
-BenchmarkGetsac1	30000000	        59.6 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap1	 5000000	       332 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkGetsac5	10000000	       134 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap5	 5000000	       341 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkGetsac8	10000000	       185 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap8	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkGetsac10	10000000	       228 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap10	 5000000	       363 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkGetsac11	10000000	       239 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap11	 5000000	       321 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkGetsac16	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap16	 5000000	       334 ns/op	       0 B/op	       0 allocs/op
-
-BenchmarkGetsac32	 2000000	       678 ns/op	       0 B/op	       0 allocs/op
-BenchmarkGethmap32	 5000000	       291 ns/op	       0 B/op	       0 allocs/op
-
-
-*/

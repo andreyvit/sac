@@ -1,13 +1,16 @@
-// Package sac defines `small array containers` a data structure of the associative array family.
+// Package sac defines `small array containers`, an implementation
+// of an unrolled linked-list that is safe for concurrent use.
 //
-// It is useful when one needs a small, recyclable Key/Value store.
-// For instance, as storage that transits between handlers of an http request.
-// The advantage is that it is not garbage collected but reused.
-// That means less pressure on the garbage collector which is always good.
+// It is useful when one needs a small, recyclable Key/Value store
+// that does not constrain the types that can be used as keys.
+// In comparison, a standard map[interface{}]interface{} is
+// susceptible to constraints on the types it accepts due to
+// its reliance on hashing.
 //
 // It is not supposed to hold a large number of objects.
 // Typically up to ~16 will compete with a RWMutex protected regular map.
-// (see benchmark results in test file)
+// It is still possible to group multiple values under a single key to save
+// space, however.
 package sac
 
 import (
@@ -17,23 +20,27 @@ import (
 
 // TODO (tay) : create generator to parameterize Key/Value types.
 
-const SIZE = 32                                   // Optimal sac size in synthetic tests.
-const padOffset = 2 - int(2*(^uintptr(0)>>63<<1)) // for friendliness on both 32bit and 64bit
+// NUM is the optimal sac size in synthetic tests.
+const NUM = 32
+
+// for friendliness on both 32bit and 64bit
+const padOffset = 2 - int(2*(^uintptr(0)>>63<<1))
 
 var (
+	// ErrNOTFOUND is returned when no value could be foun for a given key.
 	ErrNOTFOUND = errors.New("NOTFOUND")
 )
 
 // Instance defines the sac datatype.
 // It is an opaque datastructure to the user.
-// Internally, it is simply a linked list of same-size arrays.
+// Internally, it is simply a linked list of same-NUM arrays.
 type Instance struct {
-	items  [SIZE]item
+	items  [NUM]item
 	pool   *sync.Pool
 	mutex  *sync.RWMutex
 	length int
 	next   *Instance
-	pad    [padOffset + (SIZE<<1+4)&7]uint64
+	pad    [padOffset + (NUM<<1+4)&7]uint64
 }
 
 type item struct {
@@ -69,7 +76,7 @@ func (i *Instance) Get(key interface{}) (interface{}, error) {
 			return i.items[k].Value, nil
 		}
 	}
-	if i.length < SIZE {
+	if i.length < NUM {
 		i.mutex.RUnlock()
 		return nil, ErrNOTFOUND
 	}
@@ -93,7 +100,7 @@ func (i *Instance) Put(key, value interface{}) {
 			return
 		}
 	}
-	if i.length == SIZE {
+	if i.length == NUM {
 		if i.next == nil {
 			i.next = i.pool.Get().(*Instance)
 		}
@@ -165,7 +172,7 @@ func (i *Instance) Length() int {
 	return l
 }
 
-// Clear will empty a sac.
+// Clear will get rid of every value in a sac.
 // Safe for concurrent use by multiple goroutines.
 func (i *Instance) Clear() {
 	i.mutex.Lock()
@@ -186,7 +193,7 @@ func (i *Instance) Clear() {
 			s = s.next
 			break
 		}
-		for k := SIZE - 1; k >= 0; k-- {
+		for k := NUM - 1; k >= 0; k-- {
 			s.Delete(s.items[k].Key)
 		}
 
