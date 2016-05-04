@@ -1,7 +1,6 @@
 package sac
 
 import (
-	"runtime"
 	"sync"
 	"testing"
 )
@@ -204,23 +203,12 @@ func init() {
 	}
 }
 
-// Helper for parallel benchmarks
-func MaxParallelism() int {
-	maxProcs := runtime.GOMAXPROCS(0)
-	numCPU := runtime.NumCPU()
-	if maxProcs < numCPU {
-		return maxProcs
-	}
-	return numCPU
-}
-
 // SET --
 
 var result interface{}
 
 func benchmarkPut_Sac(i int, b *testing.B) {
 	b.ReportAllocs()
-	b.SetParallelism(MaxParallelism())
 
 	Inputs := generate()
 	Sac := New(Pool())
@@ -238,7 +226,6 @@ func benchmarkPut_Sac(i int, b *testing.B) {
 
 func benchmarkPut_StdHMap(i int, b *testing.B) {
 	b.ReportAllocs()
-	b.SetParallelism(MaxParallelism())
 
 	Hmap := newHMap()
 	Inputs := generate()
@@ -258,7 +245,6 @@ func benchmarkPut_StdHMap(i int, b *testing.B) {
 
 func benchmarkGet_Sac(i int, b *testing.B) {
 	b.ReportAllocs()
-	b.SetParallelism(MaxParallelism())
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
@@ -271,7 +257,6 @@ func benchmarkGet_Sac(i int, b *testing.B) {
 
 func benchmarkGet_StdHMap(i int, b *testing.B) {
 	b.ReportAllocs()
-	b.SetParallelism(MaxParallelism())
 
 	Hmap := newHMap()
 	Inputs := generate()
