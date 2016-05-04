@@ -1,5 +1,7 @@
 #sac
 
+[![GoDoc](https://godoc.org/github.com/atdiar/sac?status.svg)](https://godoc.org/github.com/atdiar/sac)
+
 Small Array Container - chained, reusable, associative arrays
 -------------------------------------------------------------
 
@@ -18,19 +20,19 @@ As a key/value store, it deals with **5** operations:
 
 It is safe for concurrent use.
 
-The operations have a linear, or quadratic time complexity. 
-It means that the more elements stored, the slower the operations will be. 
+The operations have a linear, or quadratic time complexity.
+It means that the more elements stored, the slower the operations will be.
 About a dozen or so elements is the use-case designed for.
 For performance data, look at the test file which includes synthetic benchmarks.
 
 #What can this be used for ?
-Typical usage is as a per http Request storage datastructure. 
+Typical usage is as a per http Request storage datastructure.
 After the request servicing, it will be cleared
 so that it can be reused.
 
 #How is it implemented?
 This is an unrolled linked list that is safe for concurrent use.
-The advantage is that it does not use hashing as a map would. 
+The advantage is that it does not use hashing as a map would.
 
 
 *Todo*: Create a generator to allow people to specialize Key and/or Value.  
