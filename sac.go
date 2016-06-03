@@ -27,7 +27,7 @@ const NUM = 32
 const padOffset = 2 - int(2*(^uintptr(0)>>63<<1))
 
 var (
-	// ErrNOTFOUND is returned when no value could be foun for a given key.
+	// ErrNOTFOUND is returned when no value could be found for a given key.
 	ErrNOTFOUND = errors.New("NOTFOUND")
 )
 
