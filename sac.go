@@ -209,3 +209,15 @@ func (i *Instance) Clear() {
 	i.mutex.Unlock()
 	return
 }
+
+// Clone will make and return a copy of a sac.
+func (i *Instance) Clone() *Instance {
+	i.mutex.RLock()
+	vj := *i
+	vj.mutex = new(sync.RWMutex)
+	if vj.next != nil {
+		vj.next = vj.next.Clone()
+	}
+	i.mutex.Unlock()
+	return &vj
+}
