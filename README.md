@@ -2,6 +2,8 @@
 
 [![GoDoc](https://godoc.org/github.com/atdiar/sac?status.svg)](https://godoc.org/github.com/atdiar/sac)
 
+# 07/08/16 (TODO): make a non-concurrent safe version of this + reflect based Compare function if possible
+
 Small Array Container - chained, reusable, associative arrays
 -------------------------------------------------------------
 
